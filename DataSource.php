@@ -1,18 +1,11 @@
 <?php
 namespace Phppot;
 
-/**
- * Generic datasource class for handling DB operations.
- * Uses MySqli and PreparedStatements.
- *
- * @version 2.3
- */
+
 class DataSource
 {
 
-    // PHP 7.1.0 visibility modifiers are allowed for class constants.
-    // when using above 7.1.0, declare the below constants as private
-    const HOST = 'localhost';
+ const HOST = 'localhost';
 
     const USERNAME = 'root';
 
@@ -22,27 +15,13 @@ class DataSource
 
     private $conn;
 
-    /**
-     * PHP implicitly takes care of cleanup for default connection types.
-     * So no need to worry about closing the connection.
-     *
-     * Singletons not required in PHP as there is no
-     * concept of shared memory.
-     * Every object lives only for a request.
-     *
-     * Keeping things simple and that works!
-     */
+    
     function __construct()
     {
         $this->conn = $this->getConnection();
     }
 
-    /**
-     * If connection object is needed use this method and get access to it.
-     * Otherwise, use the below methods for insert / update / etc.
-     *
-     * @return \mysqli
-     */
+    
     public function getConnection()
     {
         $conn = new \mysqli(self::HOST, self::USERNAME, self::PASSWORD, self::DATABASENAME);
@@ -55,13 +34,7 @@ class DataSource
         return $conn;
     }
 
-    /**
-     * To get database results
-     * @param string $query
-     * @param string $paramType
-     * @param array $paramArray
-     * @return array
-     */
+    
     public function select($query, $paramType="", $paramArray=array())
     {
         $stmt = $this->conn->prepare($query);
@@ -84,13 +57,7 @@ class DataSource
         }
     }
     
-    /**
-     * To insert
-     * @param string $query
-     * @param string $paramType
-     * @param array $paramArray
-     * @return int
-     */
+    
     public function insert($query, $paramType, $paramArray)
     {
         print $query;
@@ -101,12 +68,7 @@ class DataSource
         return $insertId;
     }
     
-    /**
-     * To execute query
-     * @param string $query
-     * @param string $paramType
-     * @param array $paramArray
-     */
+    
     public function execute($query, $paramType="", $paramArray=array())
     {
         $stmt = $this->conn->prepare($query);
@@ -117,13 +79,7 @@ class DataSource
         $stmt->execute();
     }
     
-    /**
-     * 1. Prepares parameter binding
-     * 2. Bind prameters to the sql statement
-     * @param string $stmt
-     * @param string $paramType
-     * @param array $paramArray
-     */
+    
     public function bindQueryParams($stmt, $paramType, $paramArray=array())
     {
         $paramValueReference[] = & $paramType;
@@ -136,13 +92,7 @@ class DataSource
         ), $paramValueReference);
     }
     
-    /**
-     * To get database results
-     * @param string $query
-     * @param string $paramType
-     * @param array $paramArray
-     * @return array
-     */
+    
     public function numRows($query, $paramType="", $paramArray=array())
     {
         $stmt = $this->conn->prepare($query);
